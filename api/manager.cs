@@ -2,9 +2,15 @@ using System;
 using System.Threading;
 using Repository;
 
+
 class Manager
 {
     private static RepositoryHandler obj = new RepositoryHandler();
+
+    public delegate void callbackRetrieve(string? data);
+    public delegate void callbackGetType(int? data);
+    public event callbackRetrieve? OnRetrieved;
+    public event callbackGetType? OnGetType;
     public void RegisterManager(string itemName, string itemContent, int itemType)
     {
         Thread workerThread = new Thread(() =>
@@ -27,24 +33,24 @@ class Manager
         workerThread.Join();
     }
 
-    public void RetrieveManager(string content,  Action<string?> callback)
+    public void RetrieveManager(string content)
     {
        Thread workerThread = new Thread(() =>
         {
             Thread.Sleep(10);
             string? result = obj.Retrieve(content);
-            callback(result);
+            OnRetrieved?.Invoke(result);
         });
         workerThread.Start();
         workerThread.Join();
     }
-    public void GetTypeManager(string content,  Action<int?> callback)
+    public void GetTypeManager(string content)
     {
        Thread workerThread = new Thread(() =>
         {
             Thread.Sleep(10);
             int? result = obj.GetType(content);
-            callback(result);
+            OnGetType?.Invoke(result);
         });
         workerThread.Start();
         workerThread.Join();

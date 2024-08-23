@@ -16,28 +16,32 @@ public class Program
     public static void Main(string[] args)
     {
         Manager manager = new Manager();
+        manager.OnRetrieved += OnRetrieved;
+        manager.OnGetType += OnGetType;
 
-        // string content = LoadJson("data.json");
+        string content = LoadJson("data.json");
 
-        // manager.RegisterManager("sensor",content, (int)ItemType.JSON);
+        manager.RegisterManager("sensor",content, (int)ItemType.JSON);
  
-        string content = LoadJson("data.xml");
+        // string content = LoadJson("data.xml");
 
-        manager.RegisterManager("sensor",content, (int)ItemType.XML);
+        // manager.RegisterManager("sensor",content, (int)ItemType.XML);
 
-        manager.RetrieveManager("sensor", result => 
-        {
-            Console.WriteLine("Retrieve: " + result);
-        });
+        manager.RetrieveManager("sensor");
 
-        manager.GetTypeManager("sensor", result => 
-        {
-            Console.WriteLine("Gettype: " + result);
-        });
-        manager.RegisterManager("sensor2",content, (int)ItemType.XML);
+        manager.GetTypeManager("sensor");
+        manager.RegisterManager("sensor2",content, (int)ItemType.JSON);
         manager.DeRegisterManager("sensor2");
         
 
+    }
+    public static void OnRetrieved(string? result) 
+    {
+        Console.WriteLine("Retrieve: " + result);
+    }
+    public static void OnGetType(int? result)
+    {
+        Console.WriteLine("Gettype: " + result);
     }
 
 }
